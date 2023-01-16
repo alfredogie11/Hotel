@@ -43,8 +43,8 @@ ob_start();
                         <i class="fa fa-user fa-fw"></i> <i class="fa fa-caret-down"></i>
                     </a>
                     <ul class="dropdown-menu dropdown-user">
-                        <li><a href="usersetting.php"><i class="fa fa-user fa-fw"></i> User Profile</a>
-                        </li>
+                        <!-- <li><a href="usersetting.php"><i class="fa fa-user fa-fw"></i> User Profile</a>
+                        </li> -->
                         <li><a href="settings.php"><i class="fa fa-gear fa-fw"></i> Settings</a>
                         </li>
                         <li class="divider"></li>
@@ -61,24 +61,15 @@ ob_start();
         <nav class="navbar-default navbar-side" role="navigation">
             <div class="sidebar-collapse">
                 <ul class="nav" id="main-menu">
-
-                    <!-- <li>
-                        <a class="active-menu" href="settings.php"><i class="fa fa-dashboard"></i>User Dashboard</a>
-                    </li> -->
-
-                    
+<!-- 
                     <li>
+                        <a class="active-menu" href="settings.php"><i class="fa fa-dashboard"></i>User Dashboard</a>
+                    </li>
+					 -->
+
+                     <li>
                         <a href="reservedRoom.php"><i class="fa fa-bar-chart-o"></i>Reserved Room</a>
                     </li>
-                    <li>
-                        <a href="bookedRoom.php"><i class="fa fa-qrcode"></i>Booked Room</a>
-                    </li>
-                    
-                    <li>
-                        <a href="logout.php"><i class="fa fa-sign-out fa-fw"></i> Logout</a>
-                    </li>
-
-					
 					
 
                     

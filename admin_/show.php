@@ -160,16 +160,36 @@ tr:hover .cut { opacity: 1; }
 	
 	
 	<?php
-	// session_start();
+	ob_start();	
+	include ('db.php');
 
-	$con = mysqli_connect("localhost","root","","hotel");
-	$que1 = mysqli_query($con, "SELECT * FROM roombook where stat = 1");
-
-	$booked_room_info  =   mysqli_fetch_assoc($que1);
-
-	$que2 = mysqli_query($con, "SELECT * FROM room where id = ".$booked_room_info["room_id"]);
-	$current_room_info =  mysqli_fetch_assoc($que2);
-							
+	$pid = $_GET['sid'];
+	
+	
+	
+	$sql ="select * from roombook where id = '$pid' ";
+	$re = mysqli_query($con,$sql);
+	while($row=mysqli_fetch_array($re))
+	{
+		$id = $row['id'];
+		$title =  $row['Title'];
+		$Fname = $row['FName'];
+		$lname = $row['LName'];
+		$email = $row['Email'];
+		$National = $row['National'];
+		$country = $row['Country'];
+		$phone = $row['Phone'];
+		$room_type = $row['TRoom'];
+		$Bed_type = $row['Bed'];
+		//$Noof_room = $row['Nroom'];
+		$meal_type = $row['Meal'];
+		$cin_date = $row['cin'];
+		$cout_date = $row['cout'];
+		$nodays = $row['nodays'];
+	
+	}
+	
+									
 	?>
 		<header>
 			<h1>Information of Guest</h1>
@@ -185,38 +205,41 @@ tr:hover .cut { opacity: 1; }
 			<address >
 				
 				<p><br></p>
-				<p>Coustomer Name  : -  <?php echo $booked_room_info["FName"]." ".$booked_room_info["LName"]." "?><br></p>
+				<p>Coustomer Name  : -  <?php echo $title.$Fname." ".$lname;?><br></p>
 			</address>
 			<table class="meta">
 				<tr>
 					<th><span >Customer ID</span></th>
-					<td><span ><?php echo $booked_room_info["id"] ?></span></td>
+					<td><span ><?php echo $id; ?></span></td>
 				</tr>
 				<tr>
 					<th><span >Check in Date</span></th>
-					<td><span ><?php echo $booked_room_info["cin"]; ?> </span></td>
+					<td><span ><?php echo $cin_date; ?> </span></td>
 				</tr>
 				<tr>
 					<th><span >Check out Date</span></th>
-					<td><span ><?php echo $booked_room_info["cout"]; ?> </span></td>
+					<td><span ><?php echo $cout_date; ?> </span></td>
 				</tr>
 				
 			</table>
 			<table >
 					<tr> 
-						<td>Customer phone : -  <?php echo $booked_room_info["Phone"]; ?> </td>
+						<td>Customer phone : -  <?php echo $phone; ?> </td>
 						
-						<td>Customer email : -  <?php echo $booked_room_info["Email"];?> </td>
+						<td>Customer email : -  <?php echo $email; ?> </td>
 					</tr>
-				
+					<tr> 
+						<td>Customer Country : -  <?php echo $country; ?> </td>
+						<td>Customer National : -  <?php echo $National; ?> </td>
+					</tr>
 				</table>
 				<br>
 				<br>
 			<table class="inventory">
 				<thead>
 					<tr>
-						<th><span >Reserved Type</span></th>
-						<th><span >Special Request</span></th>
+						<th><span >Item</span></th>
+						<th><span >No of Days</span></th>
 						
 					</tr>
 				</thead>

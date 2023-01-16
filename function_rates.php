@@ -21,7 +21,7 @@
 							</div>
 							<div class="price-selet">	
 								<h3><span>&#8369;</span>20000</h3>						
-								<a href="admin/reservation.php" >Book Now</a>
+								<a href="redirect/Reservation.php?id=6">Book Now</a>
 							</div>
 						</div>
 					</div>
@@ -44,7 +44,7 @@
 							</div>
 							<div class="price-selet">
 								<h3><span>&#8369;</span>18000</h3>
-								<a href="admin/reservation.php" >Book Now</a>
+								<a href="redirect/Reservation.php?id=7">Book Now</a>
 							</div>
 						</div>
 					</div>
@@ -67,7 +67,7 @@
 							</div>
 							<div class="price-selet">
 								<h3><span>&#8369;</span>6000</h3>
-								<a href="admin/reservation.php" >Book Now</a>
+								<a href="redirect/Reservation.php?id=8">Book Now</a>
 							</div>
 						</div>
 					</div>

@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jan 12, 2023 at 12:09 AM
+-- Generation Time: Jan 15, 2023 at 03:34 PM
 -- Server version: 10.4.27-MariaDB
 -- PHP Version: 8.2.0
 
@@ -24,21 +24,6 @@ SET time_zone = "+00:00";
 -- --------------------------------------------------------
 
 --
--- Table structure for table `contact`
---
-
-CREATE TABLE `contact` (
-  `id` int(10) UNSIGNED NOT NULL,
-  `fullname` varchar(100) DEFAULT NULL,
-  `phoneno` int(10) DEFAULT NULL,
-  `email` text DEFAULT NULL,
-  `cdate` date DEFAULT NULL,
-  `approval` varchar(12) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
-
--- --------------------------------------------------------
-
---
 -- Table structure for table `login`
 --
 
@@ -54,20 +39,7 @@ CREATE TABLE `login` (
 
 INSERT INTO `login` (`id`, `usname`, `pass`) VALUES
 (1, 'Admin', '1234'),
-(2, 'Prasath', '12345');
-
--- --------------------------------------------------------
-
---
--- Table structure for table `newsletterlog`
---
-
-CREATE TABLE `newsletterlog` (
-  `id` int(10) UNSIGNED NOT NULL,
-  `title` varchar(52) DEFAULT NULL,
-  `subject` varchar(100) DEFAULT NULL,
-  `news` text DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
+(3, 'Ogs', 'yowyow');
 
 -- --------------------------------------------------------
 
@@ -98,11 +70,8 @@ CREATE TABLE `payment` (
 --
 
 INSERT INTO `payment` (`id`, `title`, `fname`, `lname`, `troom`, `tbed`, `nroom`, `cin`, `cout`, `ttot`, `fintot`, `mepr`, `meal`, `btot`, `noofdays`) VALUES
-(1, '', 'Miae', 'Kaw', 'Single Room', 'Default', 1, '2023-01-10', '2023-01-12', 5000.00, 5160.00, 110.00, 'Extra Pillow', 50.00, 2),
-(2, '', 'Beng', 'Bang', 'Single Room', 'Default', 1, '2023-01-09', '2023-01-10', 2500.00, 2580.00, 55.00, 'Extra Pillow', 25.00, 1),
-(3, '', 'paul', 'col', 'Single Room', 'Default', 1, '2023-01-09', '2023-01-10', 2500.00, 2580.00, 55.00, 'Extra Pillow', 25.00, 1),
-(5, '', 'bram', 'mram', 'Bayabas Hall', 'Default', 1, '2023-01-09', '2023-01-10', 6000.00, 6060.00, 0.00, 'None', 60.00, 1),
-(7, '', 'atis', 'asdf', 'Atis Hall', 'Default', 1, '2023-01-09', '2023-01-11', 40000.00, 40600.00, 200.00, 'Extra Blanket', 400.00, 2);
+(1, '', 'Alfredo', 'Biler', 'Triple Room', 'Default', 1, '2023-01-12', '2023-01-13', 3500.00, 3590.00, 55.00, 'Extra Pillow', 35.00, 1),
+(2, '', 'Alfredo', 'Benitez', 'Single Room', 'Default', 1, '2023-01-13', '2023-01-14', 2500.00, 2525.00, 0.00, 'None', 25.00, 1);
 
 -- --------------------------------------------------------
 
@@ -113,31 +82,24 @@ INSERT INTO `payment` (`id`, `title`, `fname`, `lname`, `troom`, `tbed`, `nroom`
 CREATE TABLE `room` (
   `id` int(10) UNSIGNED NOT NULL,
   `type` varchar(15) DEFAULT NULL,
-  `bedding` varchar(10) DEFAULT NULL,
-  `place` varchar(10) DEFAULT NULL,
-  `cusid` int(11) DEFAULT NULL
+  `price` double NOT NULL,
+  `total` int(11) NOT NULL,
+  `image` varchar(50) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
 
 --
 -- Dumping data for table `room`
 --
 
-INSERT INTO `room` (`id`, `type`, `bedding`, `place`, `cusid`) VALUES
-(1, 'Single Room', 'Default', 'Free', 0),
-(2, 'Single Room', 'Default', 'Free', 0),
-(3, 'Single Room', 'Default', 'Free', 0),
-(4, 'Twin Room', 'Default', 'Free', NULL),
-(5, 'Twin Room', 'Default', 'Free', NULL),
-(6, 'Twin Room', 'Default', 'Free', NULL),
-(7, 'Twin Room', 'Default', 'Free', NULL),
-(8, 'Triple Room', 'Default', 'Free', NULL),
-(9, 'Suite Room', 'Default', 'Free', NULL),
-(10, 'Suite Room', 'Default', 'Free', NULL),
-(11, 'Penthouse Room', 'Default', 'Free', NULL),
-(12, 'Penthouse Room', 'Default', 'Free', NULL),
-(13, 'Atis Hall', 'Default', 'Free', 0),
-(14, 'Rambutan Hall', 'Default', 'Free', NULL),
-(15, 'Bayabas Hall', 'Default', 'Free', 0);
+INSERT INTO `room` (`id`, `type`, `price`, `total`, `image`) VALUES
+(1, 'Single Room', 2500, 15, '../images/room_rates/singleroom.jpg'),
+(2, 'Twin Room', 3000, 15, '../images/room_rates/twinroom.jpg'),
+(3, 'Triple Room', 3500, 10, '../images/room_rates/tripleroom.jpg'),
+(4, 'Suite Room', 4000, 15, '../images/room_rates/suiteroom.jpg'),
+(5, 'Penthouse Room', 10000, 5, '../images/room_rates/penthouseroom.jpg'),
+(6, 'Atis Hall', 20000, 1, '../images/function_rates/atishall.JPG'),
+(7, 'Rambutan Hall', 18000, 1, '../images/function_rates/rambutanhall.jpg'),
+(8, 'Bayabas Hall', 6000, 1, '../images/function_rates/bayabashall.jpg');
 
 -- --------------------------------------------------------
 
@@ -147,52 +109,35 @@ INSERT INTO `room` (`id`, `type`, `bedding`, `place`, `cusid`) VALUES
 
 CREATE TABLE `roombook` (
   `id` int(10) UNSIGNED NOT NULL,
-  `Title` varchar(5) DEFAULT NULL,
+  `room_id` int(11) NOT NULL,
   `FName` text DEFAULT NULL,
   `LName` text DEFAULT NULL,
   `Email` varchar(50) DEFAULT NULL,
-  `National` varchar(30) DEFAULT NULL,
-  `Country` varchar(30) DEFAULT NULL,
   `Phone` text DEFAULT NULL,
-  `TRoom` varchar(20) DEFAULT NULL,
-  `Bed` varchar(10) DEFAULT NULL,
-  `NRoom` varchar(2) DEFAULT NULL,
-  `Meal` varchar(15) DEFAULT NULL,
+  `Special_Request` varchar(500) DEFAULT NULL,
   `cin` date DEFAULT NULL,
   `cout` date DEFAULT NULL,
-  `stat` varchar(15) DEFAULT NULL,
-  `nodays` int(11) DEFAULT NULL
+  `stat` int(1) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
 
 --
 -- Dumping data for table `roombook`
 --
 
-INSERT INTO `roombook` (`id`, `Title`, `FName`, `LName`, `Email`, `National`, `Country`, `Phone`, `TRoom`, `Bed`, `NRoom`, `Meal`, `cin`, `cout`, `stat`, `nodays`) VALUES
-(4, '', 'hahah', 'heheh', 'hehh@gmmail.com', 'Filipino', 'Philippines', '23234234234', 'Single Room', 'Default', '1', 'None', '2023-01-09', '2023-01-10', 'Not Conform', 1),
-(6, '', 'Ogie', 'Benitez', 'benitez.alfredo.b.1128@gmail.com', 'Filipino', 'Philippines', '09422697900', 'Single Room', 'Default', '1', 'Extra Pillow', '2023-01-10', '2023-01-11', 'Not Conform', 1),
-(8, '', 'eee', 'ddd', 'ddd@gmail.com', 'Filipino', 'Philippines', '09422697900', 'Single Room', 'Default', '1', 'None', '0000-00-00', '0000-00-00', 'Not Conform', NULL);
+INSERT INTO `roombook` (`id`, `room_id`, `FName`, `LName`, `Email`, `Phone`, `Special_Request`, `cin`, `cout`, `stat`) VALUES
+(4, 1, 'Ogie', 'Benitez', 'benitez.alfredo.b.1128@gmail.com', '09422697900', 'malapit sa balcony', '2023-01-15', '2023-01-18', 1),
+(8, 8, 'Ogie', 'Benitez', 'benitez.alfredo.b.1128@gmail.com', '09422697900', 'pakiwalis naman', '2023-01-16', '2023-01-19', 1),
+(11, 1, 'Julian', 'Owowow', 'owow@gmail.com', '0944569800', '', '2023-01-16', '2023-01-19', 1),
+(12, 2, 'Quennie', 'Mej', 'mej@gmail.com', '0922697800', 'near Balconi', '2023-01-15', '2023-01-21', 1);
 
 --
 -- Indexes for dumped tables
 --
 
 --
--- Indexes for table `contact`
---
-ALTER TABLE `contact`
-  ADD PRIMARY KEY (`id`);
-
---
 -- Indexes for table `login`
 --
 ALTER TABLE `login`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `newsletterlog`
---
-ALTER TABLE `newsletterlog`
   ADD PRIMARY KEY (`id`);
 
 --
@@ -212,22 +157,10 @@ ALTER TABLE `roombook`
 --
 
 --
--- AUTO_INCREMENT for table `contact`
---
-ALTER TABLE `contact`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
-
---
 -- AUTO_INCREMENT for table `login`
 --
 ALTER TABLE `login`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
-
---
--- AUTO_INCREMENT for table `newsletterlog`
---
-ALTER TABLE `newsletterlog`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `room`
@@ -239,7 +172,7 @@ ALTER TABLE `room`
 -- AUTO_INCREMENT for table `roombook`
 --
 ALTER TABLE `roombook`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

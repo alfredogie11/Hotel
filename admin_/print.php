@@ -1,8 +1,11 @@
+
 <html>
 	<head>
 		<meta charset="utf-8">
-		<title>Details of Book key</title>
-		
+		<title>Invoice</title>
+		<link rel="stylesheet" href="style.css">
+		<link rel="license" href="https://www.opensource.org/licenses/mit-license/">
+		<script src="script.js"></script>
 		<style>
 		/* reset */
 
@@ -160,87 +163,185 @@ tr:hover .cut { opacity: 1; }
 	
 	
 	<?php
-	// session_start();
+	ob_start();	
+	include ('db.php');
 
-	$con = mysqli_connect("localhost","root","","hotel");
-	$que1 = mysqli_query($con, "SELECT * FROM roombook where stat = 1");
-
-	$booked_room_info  =   mysqli_fetch_assoc($que1);
-
-	$que2 = mysqli_query($con, "SELECT * FROM room where id = ".$booked_room_info["room_id"]);
-	$current_room_info =  mysqli_fetch_assoc($que2);
-							
+	$pid = $_GET['pid'];
+	
+	
+	
+	$sql ="select * from payment where id = '$pid' ";
+	$re = mysqli_query($con,$sql);
+	while($row=mysqli_fetch_array($re))
+	{
+		$id = $row['id'];
+		$title = $row['title'];
+		$fname = $row['fname'];
+		$lname = $row['lname'];
+		$troom = $row['troom'];
+		$bed = $row['tbed'];
+		$nroom = $row['nroom'];
+		$cin = $row['cin'];
+		$cout = $row['cout'];
+		$meal = $row['meal'];
+		$ttot = $row['ttot'];
+		$mepr = $row['mepr'];
+		$btot = $row['btot'];
+		$fintot = $row['fintot'];
+		$days = $row['noofdays'];
+		
+		
+		
+	
+	}
+	
+									$type_of_room = 0;       
+									if($troom=="Single Room")
+									{
+										$type_of_room = 2500;
+									
+									}
+									else if($troom=="Twin Room")
+									{
+										$type_of_room = 3000;
+									}
+									else if($troom=="Triple Room")
+									{
+										$type_of_room = 3500;
+									}
+									else if($troom=="Suite Room")
+									{
+										$type_of_room = 4000;
+									}
+									else if($troom=="Penthouse Room")
+									{
+										$type_of_room = 10000;
+									}
+									else if($troom=="Atis Hall")
+														{
+															$type_of_room = 20000;
+														}
+														else if($troom=="Rambutan Hall")
+														{
+															$type_of_room = 18000;
+														}
+														else if($troom=="Bayabas Hall")
+														{
+															$type_of_room = 6000;
+														}
+									
+									if($bed=="Single")
+									{
+										$type_of_bed = $type_of_room * 1/100;
+									}
+									else if($bed=="Double")
+									{
+										$type_of_bed = $type_of_room * 2/100;
+									}
+									else if($bed=="Triple")
+									{
+										$type_of_bed = $type_of_room * 3/100;
+									}
+									else if($bed=="Quad")
+									{
+										$type_of_bed = $type_of_room * 4/100;
+									}
+									else if($bed=="Default")
+									{
+										$type_of_bed = $type_of_room * 1/100;
+									}
+									
+									if($meal=="Extra Pillow")
+									{
+										// $type_of_meal=$type_of_bed * 2;
+										$type_of_meal= 55;
+									}else if($meal=="Extra Blanket")
+									{
+										// $type_of_meal=$type_of_bed * 3;
+										$type_of_meal=100;
+									
+									}
+									else if($meal=="None")
+									{
+										$type_of_meal=0;
+									
+									}
+	
 	?>
 		<header>
-			<h1>Information of Guest</h1>
+			<h1>Invoice</h1>
 			<address >
-			<p>BARCIE CENTER,</p>
+				<p>BARCIE CENTER,</p>
 				<p>17 Catmon Rd, <br>Capitol View Park Subdivision,<br> Bulihan Malolos, Bulacan 3000</p>
 				<p>(+94) 65 222 44 55</p>
 			</address>
 			<!-- <span><img alt="" src="assets/img/sun.png"></span> -->
 		</header>
 		<article>
-			<h1></h1>
+			<h1>Recipient</h1>
 			<address >
-				
-				<p><br></p>
-				<p>Coustomer Name  : -  <?php echo $booked_room_info["FName"]." ".$booked_room_info["LName"]." "?><br></p>
+				<p><?php echo $title.$fname." ".$lname ?> <br></p>
 			</address>
 			<table class="meta">
 				<tr>
-					<th><span >Customer ID</span></th>
-					<td><span ><?php echo $booked_room_info["id"] ?></span></td>
+					<th><span >Invoice #</span></th>
+					<td><span ><?php echo $id; ?></span></td>
 				</tr>
 				<tr>
-					<th><span >Check in Date</span></th>
-					<td><span ><?php echo $booked_room_info["cin"]; ?> </span></td>
-				</tr>
-				<tr>
-					<th><span >Check out Date</span></th>
-					<td><span ><?php echo $booked_room_info["cout"]; ?> </span></td>
+					<th><span >Date</span></th>
+					<td><span ><?php echo $cout; ?> </span></td>
 				</tr>
 				
 			</table>
-			<table >
-					<tr> 
-						<td>Customer phone : -  <?php echo $booked_room_info["Phone"]; ?> </td>
-						
-						<td>Customer email : -  <?php echo $booked_room_info["Email"];?> </td>
-					</tr>
-				
-				</table>
-				<br>
-				<br>
 			<table class="inventory">
 				<thead>
 					<tr>
-						<th><span >Reserved Type</span></th>
-						<th><span >Special Request</span></th>
-						
+						<th><span >Item</span></th>
+						<th><span >No of Days</span></th>
+						<th><span >Rate</span></th>
+						<th><span >Quantity</span></th>
+						<th><span >Price</span></th>
 					</tr>
 				</thead>
 				<tbody>
-				
 					<tr>
-						<td><span ><?php echo $room_type; ?></span></td>
-						<td><span ><?php echo $nodays; ?> </span></td>
-						
+						<td><span ><?php echo $troom; ?></span></td>
+						<td><span ><?php echo $days; ?> </span></td>
+						<td><span data-prefix>$</span><span ><?php  echo $type_of_room;?></span></td>
+						<td><span ><?php echo $nroom;?> </span></td>
+						<td><span data-prefix>$</span><span><?php echo $ttot; ?></span></td>
 					</tr>
 					<!-- <tr>
-						<td><span ><?php //echo $Bed_type; ?>  Bed </span></td>
-						<td><span ><?php //echo $nodays; ?></span></td>
-						
+						<td><span ><?php echo $bed; ?>  Bed </span></td>
+						<td><span ><?php echo $days; ?></span></td>
+						<td><span data-prefix>$</span><span ><?php  echo $type_of_bed;?></span></td>
+						<td><span ><?php echo $nroom;?> </span></td>
+						<td><span data-prefix>$</span><span><?php echo $btot; ?></span></td>
 					</tr> -->
 					<tr>
-						<td><span >Extras - <?php echo $meal_type; ?>  </span></td>
-						<td><span ><?php echo $nodays; ?></span></td>
-						
+						<td><span >Extras - <?php echo $meal; ?>  </span></td>
+						<td><span ><?php echo $days; ?></span></td>
+						<td><span data-prefix>$</span><span ><?php  echo $type_of_meal?></span></td>
+						<td><span ><?php echo $nroom;?> </span></td>
+						<td><span data-prefix>$</span><span><?php echo $mepr; ?></span></td>
 					</tr>
 				</tbody>
 			</table>
 			
-			
+			<table class="balance">
+				<tr>
+					<th><span >Total</span></th>
+					<td><span data-prefix>$</span><span><?php echo $fintot - $btot; ?></span></td>
+				</tr>
+				<tr>
+					<th><span >Amount Paid</span></th>
+					<td><span data-prefix>$</span><span >0.00</span></td>
+				</tr>
+				<tr>
+					<th><span >Balance Due</span></th>
+					<td><span data-prefix>$</span><span><?php echo $fintot - $btot; ?></span></td>
+				</tr>
+			</table>
 		</article>
 		<aside>
 			<h1><span >Contact us</span></h1>
@@ -250,7 +351,20 @@ tr:hover .cut { opacity: 1; }
 		</aside>
 	</body>
 </html>
-
+<?php
+$free="Free";
+$nul = null;
+$rpsql = "UPDATE `room` SET `place`='$free',`cusid`='$nul' where `cusid`='$id'";
+if(mysqli_query($con,$rpsql))
+{
+	$delsql= "DELETE FROM `roombook` WHERE id='$id' ";
+	
+	if(mysqli_query($con,$delsql))
+	{
+	
+	}
+}
+?>
 <?php 
 
 ob_end_flush();
