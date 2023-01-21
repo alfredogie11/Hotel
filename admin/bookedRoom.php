@@ -92,6 +92,8 @@ if (!isset($_SESSION["user"])) {
         <div id="page-wrapper">
             <div id="page-inner">
 
+
+
                 <div class="row">
                     <div class="col-md-12">
                         <h1 class="page-header">
@@ -101,7 +103,105 @@ if (!isset($_SESSION["user"])) {
                     </div>
                 </div>
 
-                <table class="table table-striped">
+                <div class="row" style="margin-bottom: 2rem">
+                    <!-- dagdag -->
+                    <div class="col-md-6"> <input type="text" class="form-control" id="search-input"
+                            placeholder="Search" />
+                    </div>
+                    <div class="col-md-3"> <button id="search-btn" class="btn btn-primary" type="button"
+                            onclick="loadDoc()">Search</button> &nbsp;
+
+                        <a href="bookedRoom.php"><button class="btn btn-info" type="button">REFRESH</button></a>
+                    </div>
+                    <div class="col-md-3"></div>
+                </div>
+
+
+                <!-- Search -->
+                <script>
+                    function loadDoc(searchVal) {
+
+                        const xhttp = new XMLHttpRequest();
+                        xhttp.onload = function () {
+                            // document.getElementById("demo").innerHTML = this.responseText;
+
+                            var response = JSON.parse(this.responseText);
+                            console.log(response)
+
+                            document.getElementById("resultbody").innerHTML = ""
+                            response.forEach(row => {
+
+                                var concatRow = Object.values(row).join(" ");
+                                //alert(concatRow)
+
+                                if (concatRow.toLocaleLowerCase().includes(searchVal.toLocaleLowerCase())) {
+                                    document.getElementById("resultbody").innerHTML +=
+                                        `
+                                        <tr>
+                                        <th scope="row">${row.type}</th>
+                                        <td>${row.FName} ${row.LName}</td>
+                                        <td>${row.Email}</td>
+                                        <td>${row.Phone}</td>
+                                        <td>${row.days}</td>
+                                        <td>${row.cin}</td>
+                                        <td>${row.cout}</td>
+                                       
+                                        <th scope="col">
+                                        <a href="viewBookedRoom.php?id='${row.id}'" target="_blank">
+                                            <button type="button" class="btn btn-primary">
+                                                    View
+                                            </button>
+                                        </a>
+                                        </th>
+
+                                        <th scope="col">
+                                        <a href="print.php?id='${row.id}'" target="_blank">
+                                            <button type="button" class="btn btn-primary">
+                                                    Receipt
+                                            </button>
+                                        </a>
+                                        </th>
+                                    </tr>
+                                        `
+
+
+                                   // setloadInfo()
+                                }
+                                else {
+                                    //alert()
+                                }
+
+
+                            });
+
+                        }
+                        xhttp.open("GET", "bookedRoomSearch.php", true);
+                        xhttp.send();
+
+
+                    }
+                </script>
+                <p id="search-p" style="display: none;">Search Result for: <span id="search-txt"> </span></p>
+                <script>
+                    document.getElementById("search-btn").onclick = function () {
+                        var searchVal = document.getElementById("search-input").value
+                        if (searchVal.trim() == "") {
+                            document.getElementById("search-p").style.display = "none"
+                            document.getElementById("search-input").value = ""
+                            location.href = "bookedRoom.php"
+                        }
+                        else {
+                            document.getElementById("search-p").style.display = "block"
+                            document.getElementById("search-txt").innerHTML = searchVal
+                            loadDoc(searchVal);
+                        }
+                    }
+                </script>
+                <!-- End of search script -->
+
+
+
+                <table class="table table-striped" id="table_id">
                     <thead>
                         <tr>
                             <th scope="col">Type</th>
@@ -109,13 +209,13 @@ if (!isset($_SESSION["user"])) {
                             <th scope="col">Email</th>
                             <th scope="col">Phone</th>
                             <th scope="col">No. of Days</th>
-                            <th scope="col">Check in</th>
-                            <th scope="col">Check out</th>
-                            
-                            <th scope="col">Action</th>
+                            <th scope="col">Checked-in</th>
+                            <th scope="col">Check-out</th>
+
+                            <th scope="col" colspan="2" style="text-align: center;">Action</th>
                         </tr>
                     </thead>
-                    <tbody>
+                    <tbody id="resultbody">
 
 
                         <?php
@@ -131,18 +231,18 @@ if (!isset($_SESSION["user"])) {
 
                         while ($result = mysqli_fetch_assoc($que1)) {
 
-                           
-                            $checkInDateTime = date_create($result["cin"],timezone_open('Asia/Manila'));
-                           
+
+                            $checkInDateTime = date_create($result["cin"], timezone_open('Asia/Manila'));
+
 
                             //check if checkout time finished
-                            $checkOutDateTime = date_create($result["cout"],timezone_open('Asia/Manila'));
-                            $currentDateTime = date_create( $date ,timezone_open('Asia/Manila'));
+                            $checkOutDateTime = date_create($result["cout"], timezone_open('Asia/Manila'));
+                            $currentDateTime = date_create($date, timezone_open('Asia/Manila'));
 
-                            $result["days"] = date_diff( $checkInDateTime, $checkOutDateTime)->format("%d");
+                            $result["days"] = date_diff($checkInDateTime, $checkOutDateTime)->format("%d");
 
-                            if( $checkOutDateTime < $currentDateTime ){
-                                mysqli_query($con, "UPDATE roombook SET stat = -1 WHERE id =".$result["id"]);
+                            if ($checkOutDateTime < $currentDateTime) {
+                                mysqli_query($con, "UPDATE roombook SET stat = -1 WHERE id =" . $result["id"]);
                                 continue;
                             }
 
@@ -166,9 +266,17 @@ if (!isset($_SESSION["user"])) {
                                         <td>' . $result_["Email"] . '</td>
                                         <td>' . $result_["Phone"] . '</td>
                                         <td>' . $result_["days"] . '</td>
-                                        <td>' . date_format(date_create($result_["cin"]), "M d, Y h:i a")  . '</td>
+                                        <td>' . date_format(date_create($result_["cin"]), "M d, Y h:i a") . '</td>
                                         <td>' . date_format(date_create($result_["cout"]), "M d, Y h:i a") . '</td>
                                        
+                                        <th scope="col">
+                                        <a href="viewBookedRoom.php?id=' . $result_["id"] . '" target="_blank">
+                                            <button type="button" class="btn btn-primary">
+                                                    View
+                                            </button>
+                                        </a>
+                                        </th>
+
                                         <th scope="col">
                                         <a href="print.php?id=' . $result_["id"] . '" target="_blank">
                                             <button type="button" class="btn btn-primary">
@@ -181,7 +289,7 @@ if (!isset($_SESSION["user"])) {
                         }
 
                         if (mysqli_num_rows($que1) == 0) {
-                            echo '<tr><td colspan="6">NO RESULT</td></tr>';
+                            echo '<tr><td colspan="9">NO RESULT</td></tr>';
                         }
                         ?>
 
@@ -258,6 +366,7 @@ if (!isset($_SESSION["user"])) {
     <script src="assets/js/morris/morris.js"></script>
     <!-- Custom Js -->
     <script src="assets/js/custom-scripts.js"></script>
+
 
 
 </body>

@@ -414,10 +414,14 @@
 		<table class="meta">
 			<tr>
 				<th><span>Invoice #</span></th>
-				<td><span><?php echo $booked_room_id; ?></span></td>
+				<td><span><?php echo $booked_room_info["invoice_id"]; ?></span></td>
 			</tr>
 			<tr>
-				<th><span>Date</span></th>
+				<th><span>Check-in Date</span></th>
+				<td><span><?php echo  date_format(date_create($booked_room_info["cin"]), "M d, Y h:i a")   ?> </span></td>
+			</tr>
+			<tr>
+				<th><span>Check-out Date</span></th>
 				<td><span><?php echo  date_format(date_create($booked_room_info["cout"]), "M d, Y h:i a")   ?> </span></td>
 			</tr>
 

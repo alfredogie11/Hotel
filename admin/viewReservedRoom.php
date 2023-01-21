@@ -129,7 +129,9 @@ if (!isset($_SESSION["user"])) {
                                         </tr>
                                         <tr>
                                             <th>Name</th>
-                                            <th><?php echo $reserved_room_info["FName"] . " " . $reserved_room_info["LName"] ?> </th>
+                                            <th>
+                                                <?php echo $reserved_room_info["FName"] . " " . $reserved_room_info["LName"] ?>
+                                            </th>
 
                                         </tr>
                                         <tr>
@@ -174,8 +176,8 @@ if (!isset($_SESSION["user"])) {
                                             <tr>
                                                 <th>Check-in Date </th>
                                                 <th><input id="cin" type="date" name="cin"
-                                                        value="<?php echo explode(" ", $reserved_room_info["cin"])[0]; ?>"
-                                                        readonly /> </th>
+                                                        value="<?php echo explode(" ", $reserved_room_info["cin"])[0]; ?>" />
+                                                </th>
                                             </tr>
                                             <tr>
                                                 <th>Check-out Date</th>
@@ -185,7 +187,7 @@ if (!isset($_SESSION["user"])) {
                                                 </th>
                                             </tr>
                                             <tr>
-                                                <th>Check-in/Check-out Time</th>
+                                                <th>Check-in Time</th>
                                                 <th contenteditable="true">
                                                     <input id="time" type="time" name="time"
                                                         value="<?php echo explode(" ", $reserved_room_info["cout"])[1]; ?>" />
@@ -215,7 +217,9 @@ if (!isset($_SESSION["user"])) {
 
                                             <tr>
                                                 <th>Price Per Day</th>
-                                                <th><?php echo "&#8369;" . $current_room_info["price"] ?></th>
+                                                <th>
+                                                    <?php echo "&#8369;" . $current_room_info["price"] ?>
+                                                </th>
 
                                             </tr>
 
@@ -248,8 +252,8 @@ if (!isset($_SESSION["user"])) {
                                         <option value="Confirm" selected>Confirm</option>
                                     </select>
                                 </div>
-                                <input type="submit" name="confirm" value="Confirm" class="btn btn-success">
-
+                                <input id="submit" type="button" name="confirm" value="Confirm" class="btn btn-success">
+                                <button id="submit2" type="submit" style="display: none;">
                                 </form>
                             </div>
                         </div>
@@ -270,7 +274,7 @@ if (!isset($_SESSION["user"])) {
                                     while ($row = mysqli_fetch_assoc($queRooms)) {
                                         $totalRoom = $row["total"];
 
-                                        $availableRoomQue = mysqli_query($con, "SELECT * FROM roombook WHERE room_id = " . $row["id"]);
+                                        $availableRoomQue = mysqli_query($con, "SELECT * FROM roombook WHERE room_id = " . $row["id"] . " AND stat !=-1");
 
                                         $availableRoomCount = intval($totalRoom) - mysqli_num_rows($availableRoomQue);
 
@@ -399,8 +403,8 @@ if (!isset($_SESSION["user"])) {
                 document.getElementById("total").innerHTML = "&#8369;" + totalPrice
             } else {
                 document.getElementById("total").innerHTML = "";
-                document.getElementById("cout").value = "<?php echo $reserved_room_info["cout"] ?>"
-                document.getElementById("cout").onchange()
+                document.getElementById("cout").value = "<?php echo $reserved_room_info["cout"] ?>".split(" ")[0]
+                //document.getElementById("cout").onchange()
             }
         }
 
@@ -408,6 +412,53 @@ if (!isset($_SESSION["user"])) {
         document.getElementById("cin").onchange = dateChange;
 
         document.getElementById("cout").onchange()
+    </script>
+
+
+    <script>
+
+        document.getElementById("time").value = new Date().toTimeString().substring(0,5)
+        console.log(new Date().toTimeString().substring(0,5))
+
+        var submit = document.getElementById("submit");
+
+
+        document.getElementById("cin").min = new Date().toISOString().split("T")[0];
+        document.getElementById("cout").min = new Date().toISOString().split("T")[0];
+        submit.onclick = function (event) {
+
+            console.log(`cin` + document.getElementById("cin").value)
+            console.log(`cout` + document.getElementById("cout").value)
+
+
+
+            var cinDate = new Date(document.getElementById("cin").value).getTime();
+            var coutDate = new Date(document.getElementById("cout").value).getTime();
+
+            if (coutDate == cinDate) {
+                alert("Checkout date cannot be the same day as checkin date");
+                return
+            } else if (coutDate < cinDate) {
+                alert("Invalid Checkout date");
+                return
+            }
+            console.log("Continue to next code.......")
+
+
+            // var cin = document.getElementById("cin").value
+            // var cout = document.getElementById("cout").value
+            //var startEnd = document.getElementById("start-end").value
+
+    
+         
+             document.getElementById("submit2").click()
+            
+
+            //console.log(startEnd)
+
+
+
+        }
     </script>
 
 
