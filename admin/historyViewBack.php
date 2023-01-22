@@ -10,10 +10,24 @@ while ($row = mysqli_fetch_assoc($que1)) {
         $row["type"] = $res1["type"];
         $row["price"] = $res1["price"];
     }
-     $checkInDateTime = date_create($row["cin"], timezone_open('Asia/Manila'));
-    $checkOutDateTime = date_create($row["cout"], timezone_open('Asia/Manila'));
+
+
+    $checkInDateTime =  new DateTime(date('Y-m-d', strtotime($row["cin"])));
+    $checkOutDateTime =  new DateTime(date('Y-m-d', strtotime($row["cout"])));
+
+   
     $row["days"] = $result["days"] = date_diff($checkInDateTime, $checkOutDateTime)->format("%d");
 
+
+    if(!is_null( $row["early_cout"])){
+        $row["early_cout"] = date_format( date_create($row["early_cout"], timezone_open('Asia/Manila')), "M d, Y h:i a");;
+    }
+    if(!is_null( $row["extended_cout"])){
+        $row["extended_cout"] = date_format( date_create($row["extended_cout"], timezone_open('Asia/Manila')), "M d, Y h:i a");;
+    }
+
+   $checkInDateTime = date_create($row["cin"], timezone_open('Asia/Manila'));
+     $checkOutDateTime = date_create($row["cout"], timezone_open('Asia/Manila'));
     $row["cin"] = date_format($checkInDateTime, "M d, Y h:i a");;
     $row["cout"] = date_format( $checkOutDateTime, "M d, Y h:i a");
 

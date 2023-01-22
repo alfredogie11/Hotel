@@ -33,7 +33,7 @@ if (!isset($_SESSION["user"])) {
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <a class="navbar-brand" href="home.php">
+                <a class="navbar-brand" >
                     <?php echo $_SESSION["user"]; ?>
                 </a>
             </div>
@@ -130,9 +130,16 @@ if (!isset($_SESSION["user"])) {
                                 //alert(concatRow)
 
                                 if (concatRow.toLocaleLowerCase().includes(searchVal.toLocaleLowerCase())) {
+
+
+                                    if (row.extended_cout != null) {
+                                        row.cout = row.extended_cout
+                                       // alert(row.extended_cout)
+                                    }
                                     document.getElementById("resultbody").innerHTML +=
                                         `
                                         <tr> 
+                                        <th scope="row">${row.room_number}</th>
                                             <td> ${row.type}  </td>
                                             <td> ${row.FName}  ${row.LName}</td>
                                             <td> ${row.Email}  </td>
@@ -195,6 +202,7 @@ if (!isset($_SESSION["user"])) {
                 <table class="table table-striped">
                     <thead>
                         <tr>
+                        <th scope="col">Room Number</th>
                             <th scope="col">Type</th>
                             <th scope="col">Name</th>
                             <th scope="col">Email</th>
@@ -250,8 +258,18 @@ if (!isset($_SESSION["user"])) {
 
 
                         foreach ($resultSet as $result_) {
+
+
+                            if (!is_null($result_["extended_cout"])) {
+                                $result_["cout"] = $result_["extended_cout"];
+                            }
+                            if (!is_null($result_["early_cout"])) {
+                                $result_["cout"] = $result_["early_cout"];
+                            }
+
                             echo '
                                         <tr>
+                                        <th scope="row">' . $result_["room_number"] . '</th>
                                         <th scope="row">' . $result_["room_type"] . '</th>
                                         <td>' . $result_["FName"] . ' ' . $result_["LName"] . '</td>
                                         <td>' . $result_["Email"] . '</td>
@@ -290,7 +308,7 @@ if (!isset($_SESSION["user"])) {
                                             xhttp2.onload = function () {
                                                 var responseInfo = JSON.parse(this.responseText);
                                                 console.log(responseInfo );
-
+                                                document.getElementById("roomNM").innerHTML = responseInfo[0].room_number
                                                 document.getElementById("titleModal").innerHTML = responseInfo[0].type
                                                 document.getElementById("nameM").innerHTML = responseInfo[0].FName + " " + responseInfo[0].LName
                                                 document.getElementById("emailM").innerHTML = responseInfo[0].Email
@@ -299,6 +317,16 @@ if (!isset($_SESSION["user"])) {
                                                 document.getElementById("requestM").innerHTML = responseInfo[0].Special_Request
                                                 document.getElementById("cinM").innerHTML = responseInfo[0].cin
                                                 document.getElementById("coutM").innerHTML = responseInfo[0].cout
+                                                document.getElementById("coutMEx").innerHTML = responseInfo[0].extended_cout
+
+                                                if(responseInfo[0].early_cout==null){
+                                                    document.getElementById("coutMEr").innerHTML = "NO"
+                                                }
+                                                else{
+                                                    document.getElementById("coutMEr").innerHTML = "YES / " + responseInfo[0].early_cout
+                                                }
+                                                
+                                               // document.getElementById("coutMEr").innerHTML = responseInfo[0].early_cout
                                                 document.getElementById("days").innerHTML = responseInfo[0].days
                                                 document.getElementById("priceM").innerHTML = "&#8369;" +responseInfo[0].price
                                                 document.getElementById("total").innerHTML = "&#8369;" +responseInfo[0].total

@@ -247,8 +247,13 @@ if (!isset($_SESSION["user"])) {
                                                 <th>No of days</th>
                                                 <th id="days">
                                                     <?php
-                                                    $from = date_create(strval($reserved_room_info["cin"]));
-                                                    $to = date_create(strval($reserved_room_info["cout"]));
+                                                    // $from = date_create(strval($reserved_room_info["cin"]));
+                                                    // $to = date_create(strval($reserved_room_info["cout"]));
+
+
+                                                   
+                    $from =  new DateTime(date('Y-m-d', strtotime($reserved_room_info["cin"])));
+                    $to =  new DateTime(date('Y-m-d', strtotime($reserved_room_info["cout"])));
 
 
                                                    

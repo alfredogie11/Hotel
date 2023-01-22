@@ -33,7 +33,7 @@ if (!isset($_SESSION["user"])) {
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <a class="navbar-brand" href="home.php">
+                <a class="navbar-brand" >
                     <?php echo $_SESSION["user"]; ?>
                 </a>
             </div>
@@ -244,8 +244,16 @@ if (!isset($_SESSION["user"])) {
 
 
                             //check if checkout time finished
-                            $checkOutDateTime = date_create($result["cout"], timezone_open('Asia/Manila'));
-                            $currentDateTime = date_create($date, timezone_open('Asia/Manila'));
+                            // $checkOutDateTime = date_create($result["cout"], timezone_open('Asia/Manila'));
+                            // $currentDateTime = date_create($date, timezone_open('Asia/Manila'));
+
+                            if(!is_null($result["extended_cout"])){
+                                $result["cout"] = $result["extended_cout"];
+                            }
+
+                            $checkInDateTime =  new DateTime(date('Y-m-d', strtotime($result["cin"])));
+                            $checkOutDateTime =  new DateTime(date('Y-m-d', strtotime($result["cout"])));
+
 
                             $result["days"] = date_diff($checkInDateTime, $checkOutDateTime)->format("%d");
 

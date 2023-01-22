@@ -475,32 +475,39 @@
 						</span></td>
 					<td><span>
 							<?php
-							$from = date_create(strval($booked_room_info["cin"]));
-							$to = "";
-
+							$from = new DateTime(date('Y-m-d', strtotime($booked_room_info["cin"])));
+							$to = ""; //date_create(strval($booked_room_info["cin"]));
+//new DateTime(date('Y-m-d', strtotime($row["cin"])));
 							$additional = 0;
 							if (is_null($booked_room_info["extended_cout"])) {
-								$to = date_create(strval($booked_room_info["cout"]));
+								$to = new DateTime(date('Y-m-d', strtotime($booked_room_info["cout"])));
 							} else {
-								$to = date_create(strval($booked_room_info["extended_cout"]));
+								$to = new DateTime(date('Y-m-d', strtotime($booked_room_info["extended_cout"])));
+								//date_create(strval($booked_room_info["extended_cout"]));
+								
 							}
 						
 
 							if (date_diff($from, $to)->format('%d') == "1") {
 								if(!is_null($booked_room_info["extended_cout"])){
-									echo   date_diff($from, $to)->format('%d ')." +". date_diff(date_create($booked_room_info["cout"]), date_create($booked_room_info["extended_cout"]))->format('%d day/s');
-									} else {
-										echo date_diff($from, $to)->format('%d day');
-									}
-							} else {
-									if(!is_null($booked_room_info["extended_cout"])){
-										$additional =  date_diff(date_create($booked_room_info["cout"]), date_create($booked_room_info["extended_cout"]))->format('%d');
-									echo   date_diff($from, $to)->format('%d ')." +". date_diff(date_create($booked_room_info["cout"]), date_create($booked_room_info["extended_cout"]))->format('%d day/s');
-									} else {
-										echo date_diff($from, $to)->format('%d days');
-									}
-
+									// echo   date_diff($from, $to)->format('%d ')." +". date_diff(date_create($booked_room_info["cout"]), date_create($booked_room_info["extended_cout"]))->format('%d day/s');
+									// } else {
+									// 	echo date_diff($from, $to)->format('%d day');
+									// }
+									echo date_diff($from, $to)->format('%d day');
+								} else {
+									// if(!is_null($booked_room_info["extended_cout"])){
+									// 	$additional =  date_diff(date_create($booked_room_info["cout"]), date_create($booked_room_info["extended_cout"]))->format('%d');
+									// echo   date_diff($from, $to)->format('%d ')." +". date_diff(date_create($booked_room_info["cout"]), date_create($booked_room_info["extended_cout"]))->format('%d day/s');
+									// } else {
+									// 	echo date_diff($from, $to)->format('%d days');
+									// }
+									echo date_diff($from, $to)->format('%d day/s');
+								}
+								
 								//
+							}else{
+								echo date_diff($from, $to)->format('%d day/s');
 							}
 							?>
 						</span></td>
