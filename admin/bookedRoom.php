@@ -138,7 +138,7 @@ if (!isset($_SESSION["user"])) {
 
                                     if (row.extended_cout != null) {
                                         row.cout = row.extended_cout
-                                        alert(row.extended_cout)
+                                       // alert(row.extended_cout)
                                     }
 
                                     document.getElementById("resultbody").innerHTML +=

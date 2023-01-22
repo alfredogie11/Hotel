@@ -86,27 +86,63 @@ if (!isset($_SESSION["user"])) {
 
         </nav>
         <!-- /. NAV SIDE  -->
+
+      
+
+
         <div id="page-wrapper">
+            
             <div id="page-inner">
-
-
                 <?php
                 $con = mysqli_connect("localhost", "root", "", "hotel");
                 $que1 = mysqli_query($con, "SELECT * FROM roombook where id = " . $_SESSION["booked_room_id"]);
 
                 $reserved_room_info = mysqli_fetch_assoc($que1);
 
-               // $_SESSION["reserved_room_id"] = $reserved_room_info["room_id"];
-
                 $que2 = mysqli_query($con, "SELECT * FROM room where id = " . $reserved_room_info["room_id"]);
                 $current_room_info = mysqli_fetch_assoc($que2);
+
+
+                    //for modal purposes confirm message
+                    $from =  new DateTime(date('Y-m-d', strtotime($reserved_room_info["cin"])));
+                    $to =  new DateTime(date('Y-m-d', strtotime($reserved_room_info["cout"])));
+///date_create(strval($reserved_room_info["cout"]));  
+
+                    // $date1 = new DateTime(date('Y-m-d', strtotime("2013-08-07 13:00:00")));
+                    // $date2 = new DateTime(date('Y-m-d', strtotime("2013-08-08 12:00:00")));     
+                    
+                    if(!is_null($reserved_room_info["extended_cout"])){
+                        $to =  new DateTime(date('Y-m-d', strtotime($reserved_room_info["extended_cout"])));
+                    }
+
+                    $_SESSION['current_room_info'] =  $current_room_info;
+                    $_SESSION['reserved_room_info'] = $reserved_room_info;
+                //echo $_SESSION['reserved_room_info']['room_number'];
+                    $_SESSION["orig_num_days"] = date_diff($from, $to)->format('%d day/s');
+                    //echo $_SESSION["orig_num_days"];    
+                    $_SESSION["orig_cout"] = $reserved_room_info["cout"];$_SESSION["orig_cin"] = $reserved_room_info["cin"];
+                   // echo $_SESSION["orig_cout"];   
+                    $_SESSION["orig_extended_cout"] = $reserved_room_info["extended_cout"];  
+                  // echo $_SESSION["orig_extended_cout"];   
+                    $_SESSION["price"] = $current_room_info["price"];
+                  ///  echo $_SESSION["price"];    
+                    $_SESSION["room_type"] = $current_room_info["type"];
+                //  echo $_SESSION["room_type"];    
 
                 if (!is_null( $reserved_room_info["extended_cout"])) {
                     $reserved_room_info["cout"] = $reserved_room_info["extended_cout"];
                 }
 
 
+                
+
                 ?>
+                
+                <!-- modal -->
+                <!-- data-toggle="modal" data-target="#exampleModalCenter" -->
+                <?php require("./viewBookedRoomModal.php");?>
+                <button style="display: none;" id="trigM"  type="button" data-toggle="modal" data-target="#exampleModalCenter">test </button>
+
 
 
                 <div class="row">
@@ -152,6 +188,16 @@ if (!isset($_SESSION["user"])) {
                                             </th>
 
                                         </tr>
+
+
+                                        <tr>
+                                            <th>Room Number </th>
+                                            <th>
+                                                <?php echo $reserved_room_info["room_number"]; ?>
+                                            </th>
+
+                                        </tr>
+
 
                                         <tr>
                                             <th>Type Of the Room </th>
@@ -204,6 +250,8 @@ if (!isset($_SESSION["user"])) {
                                                     $from = date_create(strval($reserved_room_info["cin"]));
                                                     $to = date_create(strval($reserved_room_info["cout"]));
 
+
+                                                   
                                                     if (date_diff($from, $to)->format('%d') == "1") {
                                                         echo date_diff($from, $to)->format('%d day');
                                                         ;
@@ -293,7 +341,7 @@ if (!isset($_SESSION["user"])) {
                                 <!-- Available Room Details -->
                             </div>
                             <div class="panel-body" style="display:  flex; justify-content: center;">
-                                    <form method="post" action="*" >
+                                    <form method="post" action="./checkout.php" >
                                                 <button  style="padding: 3rem;"class="btn btn-primary">Check-out</button>
                                     </form>
 
@@ -329,6 +377,7 @@ if (!isset($_SESSION["user"])) {
     <script src="assets/js/morris/morris.js"></script>
     <!-- Custom Js -->
     <script src="assets/js/custom-scripts.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
     <script>
         document.getElementById("cin").min = new Date().toISOString().split("T")[0];
         document.getElementById("cout").min = new Date().toISOString().split("T")[0];
@@ -351,8 +400,8 @@ if (!isset($_SESSION["user"])) {
             var origCout = "<?php echo $reserved_room_info["cout"] ?>".split(" ")[0]
             console.log("origdate" + document.getElementById("cout").value)
 
-
-          
+            //document.getElementById("mncout").innerHTML = document.getElementById("cout").value + " " + document.getElementById("time").value;
+            document.getElementById("mncout").innerHTML = moment(document.getElementById("cout").value + " " + document.getElementById("time").value).format('MMM DD, YYYY h:mm a');
 
             //coutDate != cinDate && coutDate > cinDate
             if (new Date(document.getElementById("cout").value) > new Date(origCout) ) {
@@ -381,6 +430,9 @@ if (!isset($_SESSION["user"])) {
                 //document.getElementById("cout").onchange()
             }
 
+            //update modal value
+            document.getElementById("dayadd").innerHTML =    parseInt(document.getElementById("days").innerText)  - parseInt('<?php echo $_SESSION["orig_num_days"]?>'.substring(0,1)) + " day/s"
+            document.getElementById("maddtot").innerHTML =  "&#8369; " +  parseInt(priceOfRoom)*  parseInt(parseInt(document.getElementById("days").innerText)  - parseInt('<?php echo $_SESSION["orig_num_days"]?>'.substring(0,1)))
         }
 
         document.getElementById("cout").onchange = dateChange;
@@ -432,7 +484,8 @@ if (!isset($_SESSION["user"])) {
 
     
          
-             document.getElementById("submit2").click()
+            // document.getElementById("submit2").click()
+            document.getElementById("trigM").click()
             
 
             //console.log(startEnd)
