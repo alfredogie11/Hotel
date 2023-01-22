@@ -138,6 +138,7 @@ if (!isset($_SESSION["user"])) {
                                     document.getElementById("resultbody").innerHTML +=
                                         `
                                         <tr>
+                                        <th scope="row">${row.room_number}</th>
                                         <th scope="row">${row.type}</th>
                                         <td>${row.FName} ${row.LName}</td>
                                         <td>${row.Email}</td>
@@ -204,6 +205,7 @@ if (!isset($_SESSION["user"])) {
                 <table class="table table-striped" id="table_id">
                     <thead>
                         <tr>
+                            <th scope="col">Room Number</th>
                             <th scope="col">Type</th>
                             <th scope="col">Name</th>
                             <th scope="col">Email</th>
@@ -241,10 +243,10 @@ if (!isset($_SESSION["user"])) {
 
                             $result["days"] = date_diff($checkInDateTime, $checkOutDateTime)->format("%d");
 
-                            if ($checkOutDateTime < $currentDateTime) {
-                                mysqli_query($con, "UPDATE roombook SET stat = -1 WHERE id =" . $result["id"]);
-                                continue;
-                            }
+                            // if ($checkOutDateTime < $currentDateTime) {
+                            //     mysqli_query($con, "UPDATE roombook SET stat = -1 WHERE id =" . $result["id"]);
+                            //     continue;
+                            // }
 
                             $room_name = "";
                             $queGetRoomName = mysqli_query($con, "SELECT * FROM room WHERE id = " . $result["room_id"]);
@@ -261,6 +263,7 @@ if (!isset($_SESSION["user"])) {
                         foreach ($resultSet as $result_) {
                             echo '
                                         <tr>
+                                        <th scope="row">' . $result_["room_number"] . '</th>
                                         <th scope="row">' . $result_["room_type"] . '</th>
                                         <td>' . $result_["FName"] . ' ' . $result_["LName"] . '</td>
                                         <td>' . $result_["Email"] . '</td>

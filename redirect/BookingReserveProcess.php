@@ -18,7 +18,7 @@ $room_id = $_SESSION["room_id"];
 $finalCinValue = $cin. " 00:00:00";
 $finalCoutValue = $cout . " 00:00:00";
 
-$res = mysqli_query($con, "INSERT INTO roombook VALUES ( DEFAULT , DEFAULT , $room_id, '$fname', '$lname', '$email' , '$phone', '$request','$finalCinValue', '$finalCoutValue',  DEFAULT , 0  )");
+$res = mysqli_query($con, "INSERT INTO roombook VALUES ( DEFAULT , DEFAULT , $room_id, DEFAULT,'$fname', '$lname', '$email' , '$phone', '$request','$finalCinValue', '$finalCoutValue',  DEFAULT ,  DEFAULT, 0  )");
 if($res){
     header("location: Reservation.php");
     $_SESSION["successBooked"] = true;

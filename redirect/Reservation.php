@@ -24,7 +24,7 @@ if ($row = mysqli_fetch_assoc($res)) {
 
 $room_is_available = true;
 
-$que2 = mysqli_query($con, "SELECT * FROM roombook WHERE room_id =  " . $_SESSION["room_id"] . " ");
+$que2 = mysqli_query($con, "SELECT * FROM roombook WHERE room_id =  " . $_SESSION["room_id"] ." AND stat !=-1 ");
 $total_available_room = intval($total_room) - mysqli_num_rows($que2);
 
 if ($total_available_room <= 0) {

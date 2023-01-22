@@ -236,6 +236,27 @@ if (!isset($_SESSION["user"])) {
 
                                             </tr>
 
+                                            
+                                            <tr>
+                                                <th>Select Room Number</th>
+                                                <th contenteditable="true">
+                                                    <select id="rnum" name="rnum">
+                                                           
+                                                            <?php
+                                                            $_SESSION["room_id"] = $reserved_room_info["room_id"];
+                                                            $queRoomNum = mysqli_query($con, "SELECT * FROM room_ids 
+                                                            WHERE room_id  = " .  $reserved_room_info["room_id"]." AND isAvailable = 0");   
+                                                            while($rowQueRnum = mysqli_fetch_assoc( $queRoomNum)){
+                                                                echo ' <option selected>'.$rowQueRnum["room_number"].'</option>';
+                                                            }
+
+                                                            ?>
+                                                    </select>
+
+                                                </th>
+
+                                            </tr>
+
 
                                     </table>
                                 </div>
