@@ -421,9 +421,10 @@ if (!isset($_SESSION["user"])) {
                 console.log("Room Price" + totalPrice)
 
                 //totalPrice
-                document.getElementById("total").innerHTML = "&#8369;" + totalPrice
+                document.getElementById("total").innerHTML = "&#8369; " + totalPrice
             } else {
-                document.getElementById("total").innerHTML = "";
+                document.getElementById("total").innerHTML = "<?php echo  "&#8369; ".intval(date_diff($from, $to)->format('%d'))  * 
+                                                      floatval($current_room_info["price"])?>";
                 document.getElementById("cout").value = "<?php echo $reserved_room_info["cout"] ?>".split(" ")[0]
                 //document.getElementById("cout").onchange()
             }

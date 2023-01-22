@@ -135,6 +135,12 @@ if (!isset($_SESSION["user"])) {
                                 //alert(concatRow)
 
                                 if (concatRow.toLocaleLowerCase().includes(searchVal.toLocaleLowerCase())) {
+
+                                    if (row.extended_cout != null) {
+                                        row.cout = row.extended_cout
+                                        alert(row.extended_cout)
+                                    }
+
                                     document.getElementById("resultbody").innerHTML +=
                                         `
                                         <tr>
@@ -148,7 +154,7 @@ if (!isset($_SESSION["user"])) {
                                         <td>${row.cout}</td>
                                        
                                         <th scope="col">
-                                        <a href="viewBookedRoom.php?id='${row.id}'" target="_blank">
+                                        <a href="bookedRoomBack.php?id='${row.id}'" >
                                             <button type="button" class="btn btn-primary">
                                                     View
                                             </button>
@@ -166,7 +172,7 @@ if (!isset($_SESSION["user"])) {
                                         `
 
 
-                                   // setloadInfo()
+                                    // setloadInfo()
                                 }
                                 else {
                                     //alert()
@@ -247,7 +253,7 @@ if (!isset($_SESSION["user"])) {
                             //     mysqli_query($con, "UPDATE roombook SET stat = -1 WHERE id =" . $result["id"]);
                             //     continue;
                             // }
-
+                        
                             $room_name = "";
                             $queGetRoomName = mysqli_query($con, "SELECT * FROM room WHERE id = " . $result["room_id"]);
                             if ($res1 = mysqli_fetch_assoc($queGetRoomName)) {
@@ -261,6 +267,11 @@ if (!isset($_SESSION["user"])) {
 
 
                         foreach ($resultSet as $result_) {
+
+                            if (!is_null($result_["extended_cout"])) {
+                                $result_["cout"] = $result_["extended_cout"];
+                            }
+
                             echo '
                                         <tr>
                                         <th scope="row">' . $result_["room_number"] . '</th>
@@ -273,7 +284,7 @@ if (!isset($_SESSION["user"])) {
                                         <td>' . date_format(date_create($result_["cout"]), "M d, Y h:i a") . '</td>
                                        
                                         <th scope="col">
-                                        <a href="viewBookedRoom.php?id=' . $result_["id"] . '" target="_blank">
+                                        <a href="bookedRoomBack.php?id=' . $result_["id"] . '" >
                                             <button type="button" class="btn btn-primary">
                                                     View
                                             </button>

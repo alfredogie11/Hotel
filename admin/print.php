@@ -381,19 +381,19 @@
 
 	<?php
 
-	
+
 
 	$_SESSION["booked_room_id"] = $_GET["id"];
 	//echo $_SESSION["booked_room_id"];
-
+	
 	$booked_room_id = $_SESSION["booked_room_id"];
 	$con = mysqli_connect("localhost", "root", "", "hotel");
-	$que1 = mysqli_query($con, "SELECT * FROM roombook WHERE stat = 1 AND id = ".$booked_room_id);
+	$que1 = mysqli_query($con, "SELECT * FROM roombook WHERE stat = 1 AND id = " . $booked_room_id);
 
-	$booked_room_info  =   mysqli_fetch_assoc($que1);
+	$booked_room_info = mysqli_fetch_assoc($que1);
 
 	$que2 = mysqli_query($con, "SELECT * FROM room where id = " . $booked_room_info["room_id"]);
-	$current_room_info =  mysqli_fetch_assoc($que2);
+	$current_room_info = mysqli_fetch_assoc($que2);
 	?>
 
 
@@ -409,26 +409,52 @@
 	<article>
 		<h1>Recipient</h1>
 		<address>
-			<p><?php echo $booked_room_info["FName"] . " " . $booked_room_info["LName"] ?> <br></p>
+			<p>
+				<?php echo $booked_room_info["FName"] . " " . $booked_room_info["LName"] ?> <br>
+			</p>
 		</address>
 		<table class="meta">
 			<tr>
 				<th><span>Invoice #</span></th>
-				<td><span><?php echo $booked_room_info["invoice_id"]; ?></span></td>
+				<td><span>
+						<?php echo $booked_room_info["invoice_id"]; ?>
+					</span></td>
 			</tr>
 			<tr>
 				<th><span>Check-in Date</span></th>
-				<td><span><?php echo  date_format(date_create($booked_room_info["cin"]), "M d, Y h:i a")   ?> </span></td>
+				<td><span>
+						<?php echo date_format(date_create($booked_room_info["cin"]), "M d, Y h:i a") ?>
+					</span></td>
 			</tr>
 			<tr>
 				<th><span>Check-out Date</span></th>
-				<td><span><?php echo  date_format(date_create($booked_room_info["cout"]), "M d, Y h:i a")   ?> </span></td>
+				<td><span>
+						<?php echo date_format(date_create($booked_room_info["cout"]), "M d, Y h:i a") ?>
+					</span></td>
+			</tr>
+			<br><br><br><br>
+
+			<tr>
+				<th><span>Extended Date</span></th>
+				<td><span>
+						<?php
+						if (!is_null($booked_room_info["extended_cout"])) {
+							echo date_format(date_create($booked_room_info["extended_cout"]), "M d, Y h:i a");
+						} else {
+							echo "NONE";
+						}
+						?>
+
+
+
+					</span></td>
 			</tr>
 
 		</table>
 		<table class="inventory">
 			<thead>
 				<tr>
+					<th><span>Room No.</span></th>
 					<th><span>Type</span></th>
 					<th><span>Special Request</span></th>
 					<th><span>No of Day/s</span></th>
@@ -438,20 +464,52 @@
 			</thead>
 			<tbody>
 				<tr>
-					<td><span><?php echo $current_room_info["type"]  ?> </span></td>
-					<td><span><?php echo $booked_room_info["Special_Request"]  ?> </span></td>
-					<td><span><?php
-								$from = date_create(strval($booked_room_info["cin"]));
-								$to = date_create(strval($booked_room_info["cout"]));
+					<td><span>
+							<?php echo $booked_room_info["room_number"] ?>
+						</span></td>
+					<td><span>
+							<?php echo $current_room_info["type"] ?>
+						</span></td>
+					<td><span>
+							<?php echo $booked_room_info["Special_Request"] ?>
+						</span></td>
+					<td><span>
+							<?php
+							$from = date_create(strval($booked_room_info["cin"]));
+							$to = "";
 
-								if (date_diff($from, $to)->format('%d') == "1") {
-									echo date_diff($from, $to)->format('%d day');
-								} else {
-									echo date_diff($from, $to)->format('%d days');
-								}
-								?></span></td>
-					<td><span><?php echo "&#8369;" . floatval($current_room_info["price"]) ?></span></td>
-					<td><span><?php echo "&#8369;" . intval(date_diff($from, $to)->format('%d')) * floatval($current_room_info["price"]) ?></span></td>
+							$additional = 0;
+							if (is_null($booked_room_info["extended_cout"])) {
+								$to = date_create(strval($booked_room_info["cout"]));
+							} else {
+								$to = date_create(strval($booked_room_info["extended_cout"]));
+							}
+						
+
+							if (date_diff($from, $to)->format('%d') == "1") {
+								if(!is_null($booked_room_info["extended_cout"])){
+									echo   date_diff($from, $to)->format('%d ')." +". date_diff(date_create($booked_room_info["cout"]), date_create($booked_room_info["extended_cout"]))->format('%d day/s');
+									} else {
+										echo date_diff($from, $to)->format('%d day');
+									}
+							} else {
+									if(!is_null($booked_room_info["extended_cout"])){
+										$additional =  date_diff(date_create($booked_room_info["cout"]), date_create($booked_room_info["extended_cout"]))->format('%d');
+									echo   date_diff($from, $to)->format('%d ')." +". date_diff(date_create($booked_room_info["cout"]), date_create($booked_room_info["extended_cout"]))->format('%d day/s');
+									} else {
+										echo date_diff($from, $to)->format('%d days');
+									}
+
+								//
+							}
+							?>
+						</span></td>
+					<td><span>
+							<?php echo "&#8369;" . floatval($current_room_info["price"]) ?>
+						</span></td>
+					<td><span>
+							<?php echo "&#8369;" . intval(date_diff($from, $to)->format('%d')) * floatval($current_room_info["price"]) + ($additional *floatval($current_room_info["price"]) ) ?>
+						</span></td>
 				</tr>
 
 			</tbody>
@@ -460,7 +518,9 @@
 		<table class="balance">
 			<tr>
 				<th><span>Total</span></th>
-				<td><span><?php echo "&#8369;" . intval(date_diff($from, $to)->format('%d')) * floatval($current_room_info["price"]) ?></span></span></td>
+				<td><span>
+						<?php echo "&#8369;" . intval(date_diff($from, $to)->format('%d')) * floatval($current_room_info["price"]) + ($additional *floatval($current_room_info["price"]) )?>
+					</span></span></td>
 			</tr>
 			<!-- <tr>
 				<th><span>Amount Paid</span></th>

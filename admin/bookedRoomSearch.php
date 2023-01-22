@@ -21,6 +21,12 @@ while ($row = mysqli_fetch_assoc($que1)) {
 
         $row["cin"] = date_format(date_create($row["cin"]), "M d, Y h:i a");
         $row["cout"] = date_format(date_create($row["cout"]), "M d, Y h:i a");
+
+
+        if(!is_null($row["extended_cout"])){
+            $row["extended_cout"] = date_format(date_create($row["extended_cout"]), "M d, Y h:i a");
+        }
+    
     }
     array_push($rs, $row);
 }
