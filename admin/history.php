@@ -318,13 +318,18 @@ if (!isset($_SESSION["user"])) {
                                                 document.getElementById("cinM").innerHTML = responseInfo[0].cin
                                                 document.getElementById("coutM").innerHTML = responseInfo[0].cout
                                                 document.getElementById("coutMEx").innerHTML = responseInfo[0].extended_cout
-
+                                                
                                                 if(responseInfo[0].early_cout==null){
                                                     document.getElementById("coutMEr").innerHTML = "NO"
                                                 }
                                                 else{
                                                     document.getElementById("coutMEr").innerHTML = "YES / " + responseInfo[0].early_cout
                                                 }
+
+                                                if(responseInfo[0].extended_cout==null){
+                                                    document.getElementById("coutMEx").innerHTML = "N/A"
+                                                }
+                                               
                                                 
                                                // document.getElementById("coutMEr").innerHTML = responseInfo[0].early_cout
                                                 document.getElementById("days").innerHTML = responseInfo[0].days

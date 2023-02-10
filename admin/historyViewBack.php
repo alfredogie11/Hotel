@@ -22,8 +22,12 @@ while ($row = mysqli_fetch_assoc($que1)) {
     if(!is_null( $row["early_cout"])){
         $row["early_cout"] = date_format( date_create($row["early_cout"], timezone_open('Asia/Manila')), "M d, Y h:i a");;
     }
+    $extendedCheckOutDateTime = null;
     if(!is_null( $row["extended_cout"])){
         $row["extended_cout"] = date_format( date_create($row["extended_cout"], timezone_open('Asia/Manila')), "M d, Y h:i a");;
+        //if the day is  extended use the extended cout date to compute no. of days
+        $extendedCheckOutDateTime = new DateTime(date('Y-m-d', strtotime($row["extended_cout"])));
+        $row["days"] = $result["days"] = date_diff($checkInDateTime, $extendedCheckOutDateTime)->format("%d");
     }
 
    $checkInDateTime = date_create($row["cin"], timezone_open('Asia/Manila'));
